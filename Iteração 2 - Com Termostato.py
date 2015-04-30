@@ -168,7 +168,7 @@ for i in range(0,24):
     
 for i in range(0,24):
     if jaules[i]>0:
-        pp=energia_interna(nAC,R,KAQ)
+        pp=energia_interna(nAC,R,KAC)
         djaulesAC.append(pp)
     if jaules[i]<0:
         op=energia_interna(nAQ,R,KAQ)
@@ -391,16 +391,18 @@ energiainternacasadps10[0]=energiainternacasadps9[3599]
 deltaenergiadps10=[0]*3600
 deltaenergiadps10[0]=deltaenergiadps9[3599]
 tempfinaldps10=[tempfinaldps9[3599]]
-
+listakipol=[]
 for i in range(1,3600):
+    kipol=(energia_interna(nAC,R,(tempfinaldps10[i-1]+273)))
     if energiainternacasadps10[i-1]>energiainterna23[1]:
         aaaa=djaulesAC[1]
         bbbb=djaulesAC[1]
         contador10+=1
     if energiainternacasadps10[i-1]<=energiainterna23[1]:
         aaaa=deltaenergiasegAC[10]
-        bbbb=deltaenergiasegAC[10]
-    energiainternacasadps10[i]=energiainternacasadps10[i-1]+aaaa-(energia_interna(nAC,R,tempfinaldps10[i-1]+273))
+        bbbb=0
+    listakipol.append(kipol)
+    energiainternacasadps10[i]=energiainternacasadps10[i-1]+aaaa-(kipol)
     deltaenergiadps10[i]=deltaenergiadps10[i-1]-bbbb+deltaenergiasegAC[10]
     rop=tempenergia(n,R,energiainternacasadps10[i])-273
     tempfinaldps10.append(rop)
@@ -412,14 +414,15 @@ deltaenergiadps11[0]=deltaenergiadps10[3599]
 tempfinaldps11=[tempfinaldps10[3599]]
 
 for i in range(1,3600):
-    if energiainternacasadps11[i-1]<energiainterna23[1]:
+    kipol=(energia_interna(nAC,R,tempfinaldps11[i-1]+273))
+    if energiainternacasadps11[i-1]>energiainterna23[1]:
         aaaa=djaulesAC[1]
         bbbb=djaulesAC[1]
         contador11+=1
-    if energiainternacasadps11[i-1]>=energiainterna23[1]:
+    if energiainternacasadps11[i-1]<=energiainterna23[1]:
         aaaa=deltaenergiasegAC[11]
         bbbb=deltaenergiasegAC[11]
-    energiainternacasadps11[i]=energiainternacasadps11[i-1]+aaaa-(energia_interna(nAC,R,tempfinaldps11[i-1]+273))
+    energiainternacasadps11[i]=energiainternacasadps11[i-1]+aaaa-kipol
     deltaenergiadps11[i]=deltaenergiadps11[i-1]+bbbb-deltaenergiasegAC[11]
     rop=tempenergia(n,R,energiainternacasadps11[i])-273
     tempfinaldps11.append(rop)
@@ -431,6 +434,7 @@ deltaenergiadps12[0]=deltaenergiadps11[3599]
 tempfinaldps12=[tempfinaldps11[3599]]
 
 for i in range(1,3600):
+    kipol=(energia_interna(nAC,R,tempfinaldps12[i-1]+273))
     if energiainternacasadps12[i-1]>energiainterna23[1]:
         aaaa=djaulesAC[1]
         bbbb=djaulesAC[1]
@@ -438,8 +442,7 @@ for i in range(1,3600):
     if energiainternacasadps12[i-1]<=energiainterna23[1]:
         aaaa=deltaenergiasegAC[12]
         bbbb=deltaenergiasegAC[12]
-    energiainternacasadps12[i]=energiainternacasadps12[i-1]+aaaa-(energia_interna(nAC,R,tempfinaldps12[i-1]+273))
-    deltaenergiadps12[i]=deltaenergiadps12[i-1]-bbbb+deltaenergiasegAC[12]
+    energiainternacasadps12[i]=energiainternacasadps12[i-1]+aaaa-kipol
     rop=tempenergia(n,R,energiainternacasadps12[i])-273
     tempfinaldps12.append(rop)
     
@@ -448,16 +451,18 @@ energiainternacasadps13[0]=energiainternacasadps12[3599]
 deltaenergiadps13=[0]*3600
 deltaenergiadps13[0]=deltaenergiadps12[3599]
 tempfinaldps13=[tempfinaldps12[3599]]
-
+testekipol=[]
 for i in range(1,3600):
+    kipol=(energia_interna(nAC,R,tempfinaldps13[i-1]+273))
     if energiainternacasadps13[i-1]>energiainterna23[1]:
         aaaa=djaulesAC[1]
+        testekipol.append(aaaa)
         bbbb=djaulesAC[1]
         contador13+=1
     if energiainternacasadps13[i-1]<=energiainterna23[1]:
         aaaa=deltaenergiasegAC[13]
         bbbb=deltaenergiasegAC[13]
-    energiainternacasadps13[i]=energiainternacasadps13[i-1]+aaaa-(energia_interna(nAC,R,tempfinaldps13[i-1]+273))
+    energiainternacasadps13[i]=energiainternacasadps13[i-1]+aaaa-kipol
     deltaenergiadps13[i]=deltaenergiadps13[i-1]-bbbb+deltaenergiasegAC[13]
     rop=tempenergia(n,R,energiainternacasadps13[i])-273
     tempfinaldps13.append(rop)
@@ -757,11 +762,11 @@ plt.show()
 print("Nessa hora o gasto energético foi de ",contador8*0.5," Watts")
 print("ou ", contador8*0.5/1000,'kW')
 
-plt.plot(Tempo,contadores,'ro:',label="Aquecedor")
-plt.plot(Tempo,contadores2,'bo:',label="Ar Condicionado")
+plt.plot(Tempo,contadores,'ro--',label="Aquecedor")
+plt.plot(Tempo,contadores2,'bo--',label="Ar Condicionado")
 plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-plt.axis([0,23,0,2])
+plt.axis([0,23,0,1.4])
 plt.ylabel('Energia[kW]')
 plt.xlabel('Horário[h]')
 plt.title('Energia gasta pelo termostato')
